@@ -75,7 +75,13 @@
 
     // This is the MEMORY.
     // As long as the page stays open, the Oracle remembers.
-    let conversation = [];
+    // Load memory if it exists
+let conversation = JSON.parse(localStorage.getItem("oracleMemory")) || [systemPrompt];
+
+// If memory exists but system prompt is missing, re-insert it
+if (!conversation.find(m => m.role === "system")) {
+  conversation.unshift(systemPrompt);
+}
 
     async function invoke() {
       const text = input.value.trim();
