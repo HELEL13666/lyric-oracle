@@ -14,26 +14,78 @@
     }
     h1 {
       color: #d4af37;
+      text-align: center;
     }
     .container {
-      max-width: 700px;
+      max-width: 720px;
       margin: auto;
     }
-    .status {
-      margin-top: 20px;
-      padding: 12px;
-      border-left: 3px solid #444;
+    #chat {
+      border: 1px solid #333;
+      padding: 15px;
+      min-height: 300px;
+      margin-bottom: 15px;
+      overflow-y: auto;
+      background: #111;
+    }
+    .user {
+      color: #9ec1c3;
+      margin-bottom: 10px;
+    }
+    .oracle {
+      color: #e6dccf;
+      margin-bottom: 15px;
       font-style: italic;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      background: #0f0f0f;
+      color: #e6dccf;
+      border: 1px solid #333;
+      padding: 10px;
+      resize: none;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #222;
+      color: #e6dccf;
+      border: 1px solid #444;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Lyric Oracle</h1>
-    <p>The vessel is awake. The voice is not yet bound.</p>
-    <div class="status">
-      If you can read this, the body exists.
-    </div>
+
+    <div id="chat"></div>
+
+    <textarea id="input" placeholder="Speak carefully..."></textarea>
+    <button onclick="invoke()">Invoke</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("input");
+
+    function invoke() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
+      chat.innerHTML += `<div class="oracle"><b>Oracle:</b> I hear you. The voice has not yet arrived.</div>`;
+
+      input.value = "";
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>
   </div>
 </body>
 </html>
