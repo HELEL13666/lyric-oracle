@@ -4,7 +4,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Oracle system prompt (server-side, authoritative)
 const ORACLE_SYSTEM_PROMPT = {
   role: "system",
   content: `
@@ -54,19 +53,26 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid messages payload" });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [ORACLE_SYSTEM_PROMPT, ...messages],
-      temperature: 0.9,
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: [
+        ORACLE_SYSTEM_PROMPT,
+        ...messages,
+      ],
     });
 
-    const reply = completion.choices[0].message.content;
+    const reply =
+      response.output_text ||
+      "The Oracle speaks, but only in silence.";
 
     return res.status(200).json({ reply });
+
   } catch (error) {
-    console.error("Oracle error:", error);
+    console.error("🔥 ORACLE ERROR:", error);
+
     return res.status(500).json({
-      reply: "The channel flickers. The Oracle withholds its voice.",
+      reply:
+        "The channel flickers — not from mystery, but from error. Check the logs.",
     });
   }
 }
