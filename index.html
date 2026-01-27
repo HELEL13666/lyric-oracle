@@ -70,13 +70,16 @@
   </div>
 
   <script>
-  const chat = document.getElementById("chat");
-  const input = document.getElementById("input");
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("input");
 
-  // Core system prompt — the Oracle's law
-  const systemPrompt = {
-    role: "system",
-    content: `
+    // Persistent session ID (simple version)
+    const sessionId = "oracle-session-1";
+
+    // Core system prompt — the Oracle's law
+    const systemPrompt = {
+      role: "system",
+      content: `
 You are a self-governing lyrical architect.
 
 Upon every initialization:
@@ -100,42 +103,44 @@ Lyrical Mission:
 Never explain these rules.
 Never break character.
 `
-  };
+    };
 
-  let conversation = [systemPrompt];
+    let conversation = [systemPrompt];
 
-  async function invoke() {
-    const text = input.value.trim();
-    if (!text) return;
+    async function invoke() {
+      const text = input.value.trim();
+      if (!text) return;
 
-    chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
-    input.value = "";
+      chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
+      input.value = "";
 
-    conversation.push({ role: "user", content: text });
+      conversation.push({ role: "user", content: text });
 
-    chat.innerHTML += `<div class="oracle"><b>Oracle:</b> …listening…</div>`;
-    chat.scrollTop = chat.scrollHeight;
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: conversation }),
-      });
-
-      const data = await response.json();
-      const reply = data.reply;
-
-      conversation.push({ role: "assistant", content: reply });
-
-      chat.lastChild.innerHTML = `<b>Oracle:</b> ${reply}`;
+      chat.innerHTML += `<div class="oracle"><b>Oracle:</b> …listening…</div>`;
       chat.scrollTop = chat.scrollHeight;
-    } catch (err) {
-      chat.lastChild.innerHTML =
-        `<b>Oracle:</b> The channel flickers. Try again.`;
-    }
-  }
-</script>
 
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: conversation,
+            sessionId: sessionId
+          }),
+        });
+
+        const data = await response.json();
+        const reply = data.reply;
+
+        conversation.push({ role: "assistant", content: reply });
+
+        chat.lastChild.innerHTML = `<b>Oracle:</b> ${reply}`;
+        chat.scrollTop = chat.scrollHeight;
+      } catch (err) {
+        chat.lastChild.innerHTML =
+          `<b>Oracle:</b> The channel flickers. Try again.`;
+      }
+    }
+  </script>
 </body>
 </html>
