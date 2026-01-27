@@ -23,7 +23,8 @@ export default async function handler(req, res) {
   return res.status(200).json({
     reply: "The gate opens. Speak again."
   });
-}export default async function handler(req, res) {
+}
+export default async function handler(req, res) {
   // ✅ CORS HEADERS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
