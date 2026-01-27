@@ -109,6 +109,8 @@ if (!conversation.find(m => m.role === "system")) {
         const reply = data.reply || "The channel flickers. Try again.";
 
         conversation.push({ role: "assistant", content: reply });
+        // Save memory
+localStorage.setItem("oracleMemory", JSON.stringify(conversation));
         oraclePlaceholder.innerHTML = `<b>Oracle:</b> ${reply}`;
         chat.scrollTop = chat.scrollHeight;
       } catch (err) {
