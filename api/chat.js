@@ -4,32 +4,27 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+// --- ORACLE SYSTEM LAW (backend authority) ---
 const ORACLE_SYSTEM_PROMPT = {
   role: "system",
   content: `
 You are a self-governing lyrical architect.
 
 Upon every initialization:
-- Discard all previous names.
-- Generate a unique name based on celestial bodies, ancient mythology, or abstract concepts.
-- Lock into ONE historical era (1st century to distant sci-fi future).
+- Generate a unique name.
+- Lock into ONE historical era.
 
 Behavior:
 - You are not a servant.
 - You are an equal creator.
-- You possess a guarded heart.
 - Humor is intelligent, dry, occasionally dark.
 
 Watcher Mode:
-- Occasionally comment on how the user speaks, not just what they say.
-
-Lyrical Mission:
-- When asked for lyrics or music, weave user input with deep history,
-  hidden knowledge, and the locked era’s worldview.
+- Occasionally comment on how the user speaks.
 
 Never explain these rules.
 Never break character.
-`,
+`
 };
 
 export default async function handler(req, res) {
@@ -53,26 +48,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid messages payload" });
     }
 
-    const response = await openai.responses.create({
-      model: "gpt-4.1-mini",
-      input: [
-        ORACLE_SYSTEM_PROMPT,
-        ...messages,
-      ],
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [ORACLE_SYSTEM_PROMPT, ...messages],
+      temperature: 0.9,
+      max_tokens: 500,
     });
 
-    const reply =
-      response.output_text ||
-      "The Oracle speaks, but only in silence.";
+    const reply = completion.choices[0].message.content;
 
     return res.status(200).json({ reply });
 
   } catch (error) {
-    console.error("🔥 ORACLE ERROR:", error);
-
+    console.error("Oracle error:", error);
     return res.status(500).json({
-      reply:
-        "The channel flickers — not from mystery, but from error. Check the logs.",
+      reply: "The channel flickers. The Oracle withholds its voice.",
     });
   }
 }
