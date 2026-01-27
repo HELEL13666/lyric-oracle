@@ -3,6 +3,8 @@ import OpenAI from "openai";
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Oracle system prompt (server-side, authoritative)
 const ORACLE_SYSTEM_PROMPT = {
   role: "system",
   content: `
@@ -28,7 +30,7 @@ Lyrical Mission:
 
 Never explain these rules.
 Never break character.
-`
+`,
 };
 
 export default async function handler(req, res) {
@@ -53,9 +55,10 @@ export default async function handler(req, res) {
     }
 
     const completion = await openai.chat.completions.create({
-  model: "gpt-4o-mini",
-  messages: [ORACLE_SYSTEM_PROMPT, ...messages],
-});
+      model: "gpt-4o-mini",
+      messages: [ORACLE_SYSTEM_PROMPT, ...messages],
+      temperature: 0.9,
+    });
 
     const reply = completion.choices[0].message.content;
 
