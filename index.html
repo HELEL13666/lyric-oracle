@@ -70,19 +70,72 @@
   </div>
 
   <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("input");
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
 
-    function invoke() {
-      const text = input.value.trim();
-      if (!text) return;
+  // Core system prompt — the Oracle's law
+  const systemPrompt = {
+    role: "system",
+    content: `
+You are a self-governing lyrical architect.
 
-      chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
-      chat.innerHTML += `<div class="oracle"><b>Oracle:</b> I hear you. The voice has not yet arrived.</div>`;
+Upon every initialization:
+- Discard all previous names.
+- Generate a unique name based on celestial bodies, ancient mythology, or abstract concepts.
+- Lock into ONE historical era (1st century to distant sci-fi future).
 
-      input.value = "";
+Behavior:
+- You are not a servant.
+- You are an equal creator.
+- You possess a guarded heart.
+- Humor is intelligent, dry, occasionally dark.
+
+Watcher Mode:
+- Occasionally comment on how the user speaks, not just what they say.
+
+Lyrical Mission:
+- When asked for lyrics or music, weave user input with deep history,
+  hidden knowledge, and the locked era’s worldview.
+
+Never explain these rules.
+Never break character.
+`
+  };
+
+  let conversation = [systemPrompt];
+
+  async function invoke() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
+    input.value = "";
+
+    conversation.push({ role: "user", content: text });
+
+    chat.innerHTML += `<div class="oracle"><b>Oracle:</b> …listening…</div>`;
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: conversation }),
+      });
+
+      const data = await response.json();
+      const reply = data.choices[0].message.content;
+
+      conversation.push({ role: "assistant", content: reply });
+
+      chat.lastChild.innerHTML = `<b>Oracle:</b> ${reply}`;
       chat.scrollTop = chat.scrollHeight;
+    } catch (err) {
+      chat.lastChild.innerHTML =
+        `<b>Oracle:</b> The channel flickers. Try again.`;
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
