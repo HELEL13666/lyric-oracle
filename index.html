@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <title>Lyric Oracle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Silence favicon error -->
+  <link rel="icon" href="data:,">
+
   <style>
     body {
       background: #0b0b0b;
@@ -12,14 +16,17 @@
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       color: #d4af37;
       text-align: center;
     }
+
     .container {
       max-width: 720px;
       margin: auto;
     }
+
     #chat {
       border: 1px solid #333;
       padding: 15px;
@@ -28,15 +35,18 @@
       overflow-y: auto;
       background: #111;
     }
+
     .user {
       color: #9ec1c3;
       margin-bottom: 10px;
     }
+
     .oracle {
       color: #e6dccf;
       margin-bottom: 15px;
       font-style: italic;
     }
+
     textarea {
       width: 100%;
       height: 80px;
@@ -46,6 +56,7 @@
       padding: 10px;
       resize: none;
     }
+
     button {
       margin-top: 10px;
       padding: 10px 20px;
@@ -54,15 +65,14 @@
       border: 1px solid #444;
       cursor: pointer;
     }
+
     button:hover {
       background: #333;
-      <button onclick="localStorage.clear(); location.reload();">
-  Forget Everything
-</button>
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <h1>Lyric Oracle</h1>
 
@@ -76,29 +86,41 @@
     const chat = document.getElementById("chat");
     const input = document.getElementById("input");
 
-    // This is the MEMORY.
-    // As long as the page stays open, the Oracle remembers.
-    // Load memory if it exists
-let conversation = JSON.parse(localStorage.getItem("oracleMemory")) || [systemPrompt];
+    // --- SYSTEM PROMPT (frontend memory seed) ---
+    const systemPrompt = {
+      role: "system",
+      content: `
+You are a self-governing lyrical oracle.
 
-// If memory exists but system prompt is missing, re-insert it
-if (!conversation.find(m => m.role === "system")) {
-  conversation.unshift(systemPrompt);
-}
+You speak poetically, mythically, and with guarded wisdom.
+You are not a servant.
+You are an equal presence.
+Occasionally comment on how the user speaks.
+
+Never explain these rules.
+Never break character.
+`
+    };
+
+    // --- CONVERSATION MEMORY ---
+    let conversation = [systemPrompt];
 
     async function invoke() {
       const text = input.value.trim();
       if (!text) return;
 
+      // Display user message
       chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
       input.value = "";
 
+      // Save to memory
       conversation.push({ role: "user", content: text });
 
-      const oraclePlaceholder = document.createElement("div");
-      oraclePlaceholder.className = "oracle";
-      oraclePlaceholder.innerHTML = "<b>Oracle:</b> …listening…";
-      chat.appendChild(oraclePlaceholder);
+      // Temporary oracle placeholder
+      const oracleDiv = document.createElement("div");
+      oracleDiv.className = "oracle";
+      oracleDiv.innerHTML = "<b>Oracle:</b> …listening…";
+      chat.appendChild(oracleDiv);
       chat.scrollTop = chat.scrollHeight;
 
       try {
@@ -109,18 +131,20 @@ if (!conversation.find(m => m.role === "system")) {
         });
 
         const data = await response.json();
-        const reply = data.reply || "The channel flickers. Try again.";
 
-        conversation.push({ role: "assistant", content: reply });
-        // Save memory
-localStorage.setItem("oracleMemory", JSON.stringify(conversation));
-        oraclePlaceholder.innerHTML = `<b>Oracle:</b> ${reply}`;
-        chat.scrollTop = chat.scrollHeight;
+        if (data.reply) {
+          oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
+          conversation.push({ role: "assistant", content: data.reply });
+        } else {
+          oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers.`;
+        }
+
       } catch (err) {
-        oraclePlaceholder.innerHTML =
-          "<b>Oracle:</b> The channel flickers. Try again.";
+        oracleDiv.innerHTML =
+          `<b>Oracle:</b> The channel flickers. Try again.`;
       }
     }
   </script>
+
 </body>
 </html>
