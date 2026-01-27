@@ -124,7 +124,7 @@ Never break character.
       });
 
       const data = await response.json();
-      const reply = data.choices[0].message.content;
+      const reply = data.reply;
 
       conversation.push({ role: "assistant", content: reply });
 
