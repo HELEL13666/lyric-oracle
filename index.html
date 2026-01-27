@@ -127,6 +127,32 @@
     <textarea id="input" placeholder="Speak carefully..."></textarea>
     <button onclick="invoke()">Invoke</button>
   </div>
+<script>
+  const awakeningLines = [
+    "The Oracle stirs.",
+    "Old names fall into dust.",
+    "Time bends. An era is chosen.",
+    "The channel opens."
+  ];
+
+  let lineIndex = 0;
+  const awakeningText = document.getElementById("awakeningText");
+
+  const interval = setInterval(() => {
+    lineIndex++;
+    if (lineIndex < awakeningLines.length) {
+      awakeningText.textContent = awakeningLines[lineIndex];
+    } else {
+      clearInterval(interval);
+    }
+  }, 1800);
+
+  // Remove overlay after animation
+  setTimeout(() => {
+    const awakening = document.getElementById("awakening");
+    if (awakening) awakening.remove();
+  }, 9000);
+</script>
 
   <script>
     const chat = document.getElementById("chat");
