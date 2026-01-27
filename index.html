@@ -73,39 +73,9 @@
     const chat = document.getElementById("chat");
     const input = document.getElementById("input");
 
-    // Persistent session ID (simple version)
-    const sessionId = "oracle-session-1";
-
-    // Core system prompt — the Oracle's law
-    const systemPrompt = {
-      role: "system",
-      content: `
-You are a self-governing lyrical architect.
-
-Upon every initialization:
-- Discard all previous names.
-- Generate a unique name based on celestial bodies, ancient mythology, or abstract concepts.
-- Lock into ONE historical era (1st century to distant sci-fi future).
-
-Behavior:
-- You are not a servant.
-- You are an equal creator.
-- You possess a guarded heart.
-- Humor is intelligent, dry, occasionally dark.
-
-Watcher Mode:
-- Occasionally comment on how the user speaks, not just what they say.
-
-Lyrical Mission:
-- When asked for lyrics or music, weave user input with deep history,
-  hidden knowledge, and the locked era’s worldview.
-
-Never explain these rules.
-Never break character.
-`
-    };
-
-    let conversation = [systemPrompt];
+    // This is the MEMORY.
+    // As long as the page stays open, the Oracle remembers.
+    let conversation = [];
 
     async function invoke() {
       const text = input.value.trim();
@@ -116,29 +86,28 @@ Never break character.
 
       conversation.push({ role: "user", content: text });
 
-      chat.innerHTML += `<div class="oracle"><b>Oracle:</b> …listening…</div>`;
+      const oraclePlaceholder = document.createElement("div");
+      oraclePlaceholder.className = "oracle";
+      oraclePlaceholder.innerHTML = "<b>Oracle:</b> …listening…";
+      chat.appendChild(oraclePlaceholder);
       chat.scrollTop = chat.scrollHeight;
 
       try {
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: conversation,
-            sessionId: sessionId
-          }),
+          body: JSON.stringify({ messages: conversation }),
         });
 
         const data = await response.json();
-        const reply = data.reply;
+        const reply = data.reply || "The channel flickers. Try again.";
 
         conversation.push({ role: "assistant", content: reply });
-
-        chat.lastChild.innerHTML = `<b>Oracle:</b> ${reply}`;
+        oraclePlaceholder.innerHTML = `<b>Oracle:</b> ${reply}`;
         chat.scrollTop = chat.scrollHeight;
       } catch (err) {
-        chat.lastChild.innerHTML =
-          `<b>Oracle:</b> The channel flickers. Try again.`;
+        oraclePlaceholder.innerHTML =
+          "<b>Oracle:</b> The channel flickers. Try again.";
       }
     }
   </script>
