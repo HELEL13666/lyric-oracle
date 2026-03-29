@@ -175,11 +175,16 @@ Never break character.
     };
 
     // --- CONVERSATION MEMORY ---
-    let conversation = [systemPrompt];
+    // Check if the little bro has any memories saved
+const savedMemory = localStorage.getItem('oracle_memory');
+let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
 
-    async function invoke() {
-      const text = input.value.trim();
-      if (!text) return;
+// Function to clear his head if he gets too "stinky"
+function resetOracle() {
+    localStorage.removeItem('oracle_memory');
+    location.reload();
+}
+
 
       // Display user message
       chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
