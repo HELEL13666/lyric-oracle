@@ -162,26 +162,19 @@
     const input = document.getElementById("input");
 
     // --- SYSTEM PROMPT (frontend memory seed) ---
-    const systemPrompt = { role: "system", content: "..." }; // Your prompt here
-const savedMemory = localStorage.getItem('oracle_memory');
-let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
+const systemPrompt = { role: "system", content: "..." };
 
-function resetOracle() {
-    localStorage.removeItem('oracle_memory');
-    location.reload();
-}
+  // --- CONVERSATION MEMORY ---
+  // Check if the little bro has any memories saved
+  const savedMemory = localStorage.getItem('oracle_memory');
+  let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
 
+  // Function to clear his head if he gets too "stinky"
+  function resetOracle() {
+      localStorage.removeItem('oracle_memory');
+      location.reload();
+  }
 
-    // --- CONVERSATION MEMORY ---
-    // Check if the little bro has any memories saved
-const savedMemory = localStorage.getItem('oracle_memory');
-let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
-
-// Function to clear his head if he gets too "stinky"
-function resetOracle() {
-    localStorage.removeItem('oracle_memory');
-    location.reload();
-}
 
 
       // Display user message
@@ -206,18 +199,13 @@ function resetOracle() {
         });
 
         const data = await response.json();
-
         if (data.reply) {
-          oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
-          conversation.push({ role: "assistant", content: data.reply });
-            localStorage.setItem('oracle_memory', JSON.stringify(conversation));
-        } else {
-          oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers.`;
-        }
+    oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
+    conversation.push({ role: "assistant", content: data.reply });
+    localStorage.setItem('oracle_memory', JSON.stringify(conversation));
+}
 
-      } catch (err) {
-        oracleDiv.innerHTML =
-          `<b>Oracle:</b> The channel flickers. Try again.`;
+      
       }
     }
   </script>
