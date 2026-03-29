@@ -162,20 +162,15 @@
     const input = document.getElementById("input");
 
     // --- SYSTEM PROMPT (frontend memory seed) ---
-    const systemPrompt = {
-      role: "system",
-      content: `
-You are a self-governing lyrical oracle.
+    const systemPrompt = { role: "system", content: "..." }; // Your prompt here
+const savedMemory = localStorage.getItem('oracle_memory');
+let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
 
-You speak poetically, mythically, and with guarded wisdom.
-You are not a servant.
-You are an equal presence.
-Occasionally comment on how the user speaks.
+function resetOracle() {
+    localStorage.removeItem('oracle_memory');
+    location.reload();
+}
 
-Never explain these rules.
-Never break character.
-`
-    };
 
     // --- CONVERSATION MEMORY ---
     // Check if the little bro has any memories saved
