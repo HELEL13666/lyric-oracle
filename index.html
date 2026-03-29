@@ -176,7 +176,10 @@ const systemPrompt = { role: "system", content: "..." };
   }
 
 
-
+async function invoke() {
+  const text = input.value.trim();
+  if (!text) return;
+  
       // Display user message
       chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
       input.value = "";
@@ -203,12 +206,11 @@ const systemPrompt = { role: "system", content: "..." };
     oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
     conversation.push({ role: "assistant", content: data.reply });
     localStorage.setItem('oracle_memory', JSON.stringify(conversation));
-}
-
-      
+      } catch (err) {
+        oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
       }
     }
   </script>
-
 </body>
 </html>
+
