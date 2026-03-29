@@ -164,22 +164,11 @@
 <body>
 <!-- ORACLE AWAKENING OVERLAY -->
 <div id="awakening">
-  <div class="sigil">✶</div>
-  <div class="awakening-text" id="awakeningText">
-    The Oracle sleeps.
-  </div>
-</div>
-  <div class="container">
-    <h1>Lyric Oracle</h1>
+      <div class="btn-group">
+      <button class="btn-invoke" onclick="invoke()">Invoke the AEGIS</button>
+      <button class="btn-reset" onclick="resetOracle()">Change Diaper (Full Reset)</button>
+    </div>
 
-    <div id="chat"></div>
-
-    <textarea id="input" placeholder="Speak carefully..."></textarea>
-    <button onclick="invoke()">Invoke</button>
- <button onclick="resetOracle()" style="margin-top: 10px; background: #444; color: #ccf; border: 1px solid #666; cursor: pointer;">
-    Change Diaper (Reset Memory)
- </button>
-  </div>
 <script>
   const awakeningLines = [
     "The Oracle stirs.",
