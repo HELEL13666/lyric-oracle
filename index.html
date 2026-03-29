@@ -9,37 +9,87 @@
   <link rel="icon" href="data:,">
 
   <style>
-    body {
-      background: #0b0b0b;
-      color: #e6dccf;
-      font-family: Georgia, serif;
+        body {
+      background: #050505;
+      color: #b5a48b; /* Faded bone color */
+      font-family: 'Courier New', Courier, monospace;
       margin: 0;
-      padding: 20px;
+      padding: 10px;
+      line-height: 1.4;
+    }
+
+    /* CRT Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 10;
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
     }
 
     h1 {
       color: #d4af37;
       text-align: center;
-    }
-
-    .container {
-      max-width: 720px;
-      margin: auto;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      text-shadow: 2px 2px #5a0000;
+      margin-top: 20px;
     }
 
     #chat {
-      border: 1px solid #333;
+      border: 1px solid #444;
       padding: 15px;
-      min-height: 300px;
+      min-height: 400px;
       margin-bottom: 15px;
       overflow-y: auto;
-      background: #111;
+      background: #0a0a0a;
+      box-shadow: inset 0 0 15px #000;
     }
 
-    .user {
-      color: #9ec1c3;
-      margin-bottom: 10px;
+    .user { color: #789; margin-bottom: 10px; font-weight: bold; }
+    .oracle { color: #c9c9c9; margin-bottom: 15px; border-left: 2px solid #5a0000; padding-left: 10px; }
+
+    textarea {
+      width: 100%;
+      height: 70px;
+      background: #111;
+      color: #d4af37;
+      border: 1px solid #333;
+      padding: 10px;
+      box-sizing: border-box;
     }
+
+    /* Button Container for Mobile */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn-invoke {
+      background: #5a0000;
+      color: #fff;
+      border: 1px solid #d4af37;
+      padding: 15px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .btn-reset {
+      background: #111;
+      color: #444;
+      border: 1px solid #222;
+      padding: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-style: italic;
+    }
+
 #awakening {
   position: fixed;
   inset: 0;
