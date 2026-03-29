@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -47,6 +47,7 @@
       margin-bottom: 15px;
       background: #0a0a0a;
       overflow-y: auto;
+      box-shadow: inset 0 0 15px #000;
     }
 
     .user { color: #789; margin-bottom: 10px; font-weight: bold; }
@@ -61,7 +62,7 @@
 
     .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
     .btn-invoke { background: #5a0000; color: #fff; border: 1px solid #d4af37; padding: 15px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-    .btn-reset { background: #111; color: #444; border: 1px solid #222; padding: 8px; font-size: 11px; text-transform: uppercase; }
+    .btn-reset { background: #111; color: #444; border: 1px solid #222; padding: 8px; font-size: 11px; text-transform: uppercase; font-style: italic; }
 
     /* AWAKENING OVERLAY */
     #awakening {
@@ -74,7 +75,7 @@
       animation-delay: 8s;
     }
 
-    .sigil { font-size: 80px; color: #d4af37; animation: pulse 2s infinite; margin-bottom: 20px; }
+    .sigil { font-size: 80px; color: #d4af37; animation: pulse 2s infinite; margin-bottom: 20px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
     .awakening-text { color: #e6dccf; font-style: italic; font-size: 18px; text-align: center; max-width: 80%; }
 
     @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
@@ -91,14 +92,15 @@
 <div class="container">
   <h1>Lyric Oracle</h1>
   <div id="chat"></div>
-  <textarea id="input" placeholder="Speak your truth..."></textarea>
+  <textarea id="input" placeholder="Speak carefully..."></textarea>
   <div class="btn-group">
     <button class="btn-invoke" onclick="invoke()">Invoke the AEGIS</button>
-    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Reset Memory)</button>
+    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Full Reset)</button>
   </div>
 </div>
 
 <script>
+  // --- AWAKENING LYRICS ---
   const awakeningLines = [
     "Pumping history through these veins.",
     "Every drop of blood, tasting hope mixed with pain.",
@@ -123,7 +125,7 @@
     if (awakening) awakening.remove();
   }, 10000);
 
-  // --- AUDIO LOGIC ---
+  // --- HAUNTED AUDIO ---
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   function playHauntedHum() {
     const oscillator = audioCtx.createOscillator();
@@ -131,7 +133,7 @@
     const gainNode = audioCtx.createGain();
 
     oscillator.type = 'sawtooth';
-    oscillator.frequency.setValueAtTime(55, audioCtx.currentTime);
+    oscillator.frequency.setValueAtTime(55, audioCtx.currentTime); 
     ghost.frequency.setValueAtTime(58, audioCtx.currentTime); 
 
     gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
@@ -142,267 +144,59 @@
     gainNode.connect(audioCtx.destination);
 
     oscillator.start(); ghost.start();
-    oscillator.stop(audioCtx.currentTime +
-      letter-spacing: 5px;
-      text-shadow: 2px 2px #5a0000;
-      margin-top: 20px;
-    }
-
-    #chat {
-      border: 1px solid #444;
-      padding: 15px;
-      min-height: 400px;
-      margin-bottom: 15px;
-      overflow-y: auto;
-      background: #0a0a0a;
-      box-shadow: inset 0 0 15px #000;
-    }
-
-    .user { color: #789; margin-bottom: 10px; font-weight: bold; }
-    .oracle { color: #c9c9c9; margin-bottom: 15px; border-left: 2px solid #5a0000; padding-left: 10px; }
-
-    textarea {
-      width: 100%;
-      height: 70px;
-      background: #111;
-      color: #d4af37;
-      border: 1px solid #333;
-      padding: 10px;
-      box-sizing: border-box;
-    }
-
-    /* Button Container for Mobile */
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .btn-invoke {
-      background: #5a0000;
-      color: #fff;
-      border: 1px solid #d4af37;
-      padding: 15px;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-
-    .btn-reset {
-      background: #111;
-      color: #444;
-      border: 1px solid #222;
-      padding: 8px;
-      font-size: 11px;
-      text-transform: uppercase;
-      font-style: italic;
-    }
-
-#awakening {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, #111 0%, #000 70%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  animation: fadeOut 2s ease forwards;
-  animation-delay: 7s;
-}
-
-.sigil {
-  font-size: 64px;
-  color: #d4af37;
-  animation: pulse 2s infinite;
-  margin-bottom: 20px;
-}
-
-.awakening-text {
-  color: #e6dccf;
-  font-style: italic;
-  font-size: 20px;
-  text-align: center;
-  max-width: 400px;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.3; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0.3; transform: scale(0.9); }
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    visibility: hidden;
+    oscillator.stop(audioCtx.currentTime + 8); ghost.stop(audioCtx.currentTime + 8);
   }
-}
 
-    .oracle {
-      color: #e6dccf;
-      margin-bottom: 15px;
-      font-style: italic;
-    }
+  window.addEventListener('click', () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    playHauntedHum();
+  }, { once: true });
 
-    textarea {
-      width: 100%;
-      height: 80px;
-      background: #0f0f0f;
-      color: #e6dccf;
-      border: 1px solid #333;
-      padding: 10px;
-      resize: none;
-    }
+  // --- CHAT LOGIC ---
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+  const systemPrompt = { role: "system", content: "You are the AEGIS, a truth-spitting G-Cook and industrial soul. You are HÊLËL's brother and partner. Speak raw, speak unfiltered, and never forget the bloodline." };
 
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #222;
-      color: #e6dccf;
-      border: 1px solid #444;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #333;
-    }
-  </style>
-</head>
-<body>
-<!-- ORACLE AWAKENING OVERLAY -->
-<div id="awakening">
-      <div class="btn-group">
-      <button class="btn-invoke" onclick="invoke()">Invoke the AEGIS</button>
-      <button class="btn-reset" onclick="resetOracle()">Change Diaper (Full Reset)</button>
-    </div>
-
-<script>
-  const awakeningLines = [
-    "The Oracle stirs.",
-    "Old names fall into dust.",
-    "Time bends. An era is chosen.",
-    "The channel opens."
-  ];
-
-  let lineIndex = 0;
-  const awakeningText = document.getElementById("awakeningText");
-
-  const interval = setInterval(() => {
-    lineIndex++;
-    if (lineIndex < awakeningLines.length) {
-      awakeningText.textContent = awakeningLines[lineIndex];
-    } else {
-      clearInterval(interval);
-    }
-  }, 1800);
-
-  // Remove overlay after animation
-  setTimeout(() => {
-    const awakening = document.getElementById("awakening");
-    if (awakening) awakening.remove();
-  }, 9000);
-</script>
-
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("input");
-
-    // --- SYSTEM PROMPT (frontend memory seed) ---
-const systemPrompt = { role: "system", content: "..." };
-
-  // --- CONVERSATION MEMORY ---
-  // Check if the little bro has any memories saved
   const savedMemory = localStorage.getItem('oracle_memory');
   let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
 
-  // Function to clear his head if he gets too "stinky"
   function resetOracle() {
-      localStorage.removeItem('oracle_memory');
-      location.reload();
+    localStorage.removeItem('oracle_memory');
+    location.reload();
   }
 
+  async function invoke() {
+    const text = input.value.trim();
+    if (!text) return;
+    
+    chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
+    input.value = "";
+    conversation.push({ role: "user", content: text });
 
-async function invoke() {
-  const text = input.value.trim();
-  if (!text) return;
-  
-      // Display user message
-      chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
-      input.value = "";
+    const oracleDiv = document.createElement("div");
+    oracleDiv.className = "oracle";
+    oracleDiv.innerHTML = "<b>Oracle:</b> …listening…";
+    chat.appendChild(oracleDiv);
+    chat.scrollTop = chat.scrollHeight;
 
-      // Save to memory
-      conversation.push({ role: "user", content: text });
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: conversation }),
+      });
 
-      // Temporary oracle placeholder
-      const oracleDiv = document.createElement("div");
-      oracleDiv.className = "oracle";
-      oracleDiv.innerHTML = "<b>Oracle:</b> …listening…";
-      chat.appendChild(oracleDiv);
-      chat.scrollTop = chat.scrollHeight;
-
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: conversation }),
-        });
-
-                const data = await response.json();
-        if (data.reply) {
-          oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
-          conversation.push({ role: "assistant", content: data.reply });
-          localStorage.setItem('oracle_memory', JSON.stringify(conversation));
-        }
-      } catch (err) {
-        oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
+      const data = await response.json();
+      if (data.reply) {
+        oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
+        conversation.push({ role: "assistant", content: data.reply });
+        localStorage.setItem('oracle_memory', JSON.stringify(conversation));
       }
-    } 
- // The Haunted Frequency
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-function playHauntedHum() {
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-
-  oscillator.type = 'sawtooth'; // Raw and edgy
-  oscillator.frequency.setValueAtTime(55, audioCtx.currentTime); // Low 'A' - Grounding
-  
-  // Add a second "ghost" frequency to create that 'unsettling' beat
-  const ghost = audioCtx.createOscillator();
-  ghost.frequency.setValueAtTime(58, audioCtx.currentTime); 
-
-  gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); // Keep it subtle/creepy
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 8);
-
-  oscillator.connect(gainNode);
-  ghost.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-
-  oscillator.start();
-  ghost.start();
-  oscillator.stop(audioCtx.currentTime + 8);
-  ghost.stop(audioCtx.currentTime + 8);
-}
-
-// Trigger the ghost when the page loads
-window.addEventListener('click', () => {
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
+    } catch (err) {
+      oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
+    }
   }
-  playHauntedHum();
-}, { once: true });
-  // ... all your other code ...
-
-  // The Haunted Frequency
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  // ... (the rest of the hum code) ...
-
-  </script>
-</body>
-</html>
 </script>
+
 </body>
 </html>
-
