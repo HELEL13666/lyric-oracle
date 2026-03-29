@@ -201,15 +201,16 @@ async function invoke() {
           body: JSON.stringify({ messages: conversation }),
         });
 
-        const data = await response.json();
+                const data = await response.json();
         if (data.reply) {
-    oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
-    conversation.push({ role: "assistant", content: data.reply });
-    localStorage.setItem('oracle_memory', JSON.stringify(conversation));
+          oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
+          conversation.push({ role: "assistant", content: data.reply });
+          localStorage.setItem('oracle_memory', JSON.stringify(conversation));
+        }
       } catch (err) {
         oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
       }
-    }
+    } 
   </script>
 </body>
 </html>
