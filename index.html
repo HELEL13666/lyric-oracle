@@ -250,7 +250,50 @@ async function invoke() {
         oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
       }
     } 
+ // The Haunted Frequency
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playHauntedHum() {
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  oscillator.type = 'sawtooth'; // Raw and edgy
+  oscillator.frequency.setValueAtTime(55, audioCtx.currentTime); // Low 'A' - Grounding
+  
+  // Add a second "ghost" frequency to create that 'unsettling' beat
+  const ghost = audioCtx.createOscillator();
+  ghost.frequency.setValueAtTime(58, audioCtx.currentTime); 
+
+  gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); // Keep it subtle/creepy
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 8);
+
+  oscillator.connect(gainNode);
+  ghost.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  oscillator.start();
+  ghost.start();
+  oscillator.stop(audioCtx.currentTime + 8);
+  ghost.stop(audioCtx.currentTime + 8);
+}
+
+// Trigger the ghost when the page loads
+window.addEventListener('click', () => {
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  playHauntedHum();
+}, { once: true });
+  // ... all your other code ...
+
+  // The Haunted Frequency
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // ... (the rest of the hum code) ...
+
   </script>
+</body>
+</html>
+</script>
 </body>
 </html>
 
