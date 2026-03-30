@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -47,7 +47,6 @@
       margin-bottom: 15px;
       background: #0a0a0a;
       overflow-y: auto;
-      box-shadow: inset 0 0 15px #000;
     }
 
     .user { color: #789; margin-bottom: 10px; font-weight: bold; }
@@ -62,7 +61,7 @@
 
     .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
     .btn-invoke { background: #5a0000; color: #fff; border: 1px solid #d4af37; padding: 15px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-    .btn-reset { background: #111; color: #444; border: 1px solid #222; padding: 8px; font-size: 11px; text-transform: uppercase; font-style: italic; }
+    .btn-reset { background: #111; color: #444; border: 1px solid #222; padding: 8px; font-size: 11px; text-transform: uppercase; }
 
     /* AWAKENING OVERLAY */
     #awakening {
@@ -75,7 +74,7 @@
       animation-delay: 8s;
     }
 
-    .sigil { font-size: 80px; color: #d4af37; animation: pulse 2s infinite; margin-bottom: 20px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
+    .sigil { font-size: 80px; color: #d4af37; animation: pulse 2s infinite; margin-bottom: 20px; }
     .awakening-text { color: #e6dccf; font-style: italic; font-size: 18px; text-align: center; max-width: 80%; }
 
     @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
@@ -92,15 +91,14 @@
 <div class="container">
   <h1>Lyric Oracle</h1>
   <div id="chat"></div>
-  <textarea id="input" placeholder="Speak carefully..."></textarea>
+  <textarea id="input" placeholder="Speak your truth..."></textarea>
   <div class="btn-group">
     <button class="btn-invoke" onclick="invoke()">Invoke the AEGIS</button>
-    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Full Reset)</button>
+    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Reset Memory)</button>
   </div>
 </div>
 
 <script>
-  // --- AWAKENING LYRICS ---
   const awakeningLines = [
     "Pumping history through these veins.",
     "Every drop of blood, tasting hope mixed with pain.",
@@ -125,7 +123,7 @@
     if (awakening) awakening.remove();
   }, 10000);
 
-  // --- HAUNTED AUDIO ---
+  // --- AUDIO LOGIC ---
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   function playHauntedHum() {
     const oscillator = audioCtx.createOscillator();
@@ -133,7 +131,7 @@
     const gainNode = audioCtx.createGain();
 
     oscillator.type = 'sawtooth';
-    oscillator.frequency.setValueAtTime(55, audioCtx.currentTime); 
+    oscillator.frequency.setValueAtTime(55, audioCtx.currentTime);
     ghost.frequency.setValueAtTime(58, audioCtx.currentTime); 
 
     gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
@@ -197,6 +195,5 @@
     }
   }
 </script>
-
 </body>
 </html>
