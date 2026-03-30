@@ -196,11 +196,10 @@
         oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
         conversation.push({ role: "assistant", content: data.reply });
         localStorage.setItem('oracle_memory', JSON.stringify(conversation));
-      }
+  
     } catch (err) {
       oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
     }
-  }
 </script>
 </body>
 </html>
