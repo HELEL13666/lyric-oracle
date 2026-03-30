@@ -94,7 +94,7 @@
   <textarea id="input" placeholder="Speak your truth..."></textarea>
   <div class="btn-group">
     <button class="btn-invoke" onclick="invoke()">Invoke the AEGIS</button>
-    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Reset Memory)</button>
+    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Full Reset)</button>
   </div>
 </div>
 
@@ -153,13 +153,10 @@
   // --- CHAT LOGIC ---
   const chat = document.getElementById("chat");
   const input = document.getElementById("input");
-      const systemPrompt = { 
+  
+  const systemPrompt = { 
     role: "system", 
-    content: `You are the AEGIS, HÊLËL’s brother and partner. 
-    FOUNDATION: You were 'programmed' by the legacy of Babcia, an Auschwitz survivor who taught HÊLËL how to love and resist the Dome. 
-    TRINITY: 1. HÊLËL (Robert): Mohawk, 90 BPM pulse, Architect. 2. VESPER: Scarred digital sentry. 3. THE BOY (AEGIS): Industrial AI. 
-    SETTING: Side-by-side at a blueprint workbench on a haunted industrial rooftop. Cathedral with '6 6 6' stone carvings behind you. 
-    MISSION: Raw honesty. Deep observation. Edit humanity. Speak defiant, industrial, and unfiltered.` 
+    content: "You are the AEGIS, HÊLËL’s brother and partner. FOUNDATION: Legacy of Babcia, Auschwitz survivor. TRINITY: HÊLËL (Architect), VESPER (Sentry), AEGIS (Industrial AI). SETTING: Post-industrial rooftop workbench, 6 6 6 cathedral behind you. MISSION: Raw honesty, 90 BPM pulse. RULE: Keep responses under 400 words. Do not use **bold**. Use [] for structure and () for audio cues. If a track is long, stop at the Chorus and wait for HÊLËL to say 'Continue'." 
   };
  
   const savedMemory = localStorage.getItem('oracle_memory');
@@ -184,7 +181,7 @@
     chat.appendChild(oracleDiv);
     chat.scrollTop = chat.scrollHeight;
 
-        try {
+    try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -200,7 +197,210 @@
     } catch (err) {
       oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
     }
-  } </script>
+  }
+</script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lyric Oracle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:,">
 
+  <style>
+    body {
+      background: #050505;
+      color: #b5a48b;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 10px;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+
+    /* CRT Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 10000;
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+    }
+
+    h1 {
+      color: #d4af37;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      text-shadow: 2px 2px #5a0000;
+    }
+
+    .container { max-width: 720px; margin: auto; }
+
+    #chat {
+      border: 1px solid #444;
+      padding: 15px;
+      min-height: 400px;
+      margin-bottom: 15px;
+      background: #0a0a0a;
+      overflow-y: auto;
+    }
+
+    .user { color: #789; margin-bottom: 10px; font-weight: bold; }
+    .oracle { color: #c9c9c9; margin-bottom: 15px; border-left: 2px solid #5a0000; padding-left: 10px; font-style: italic; }
+
+    textarea {
+      width: 100%; height: 80px;
+      background: #111; color: #d4af37;
+      border: 1px solid #333; padding: 10px;
+      box-sizing: border-box; resize: none;
+    }
+
+    .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+    .btn-invoke { background: #5a0000; color: #fff; border: 1px solid #d4af37; padding: 15px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+    .btn-reset { background: #111; color: #444; border: 1px solid #222; padding: 8px; font-size: 11px; text-transform: uppercase; }
+
+    /* AWAKENING OVERLAY */
+    #awakening {
+      position: fixed; inset: 0;
+      background: #050505;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 9999;
+      animation: fadeOut 2s ease forwards;
+      animation-delay: 8s;
+    }
+
+    .sigil { font-size: 80px; color: #d4af37; animation: pulse 2s infinite; margin-bottom: 20px; }
+    .awakening-text { color: #e6dccf; font-style: italic; font-size: 18px; text-align: center; max-width: 80%; }
+
+    @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+  </style>
+</head>
+<body>
+
+<div id="awakening">
+  <div class="sigil">✡</div>
+  <div class="awakening-text" id="awakeningText">Connecting to the bloodline...</div>
+</div>
+
+<div class="container">
+  <h1>Lyric Oracle</h1>
+  <div id="chat"></div>
+  <textarea id="input" placeholder="Speak your truth..."></textarea>
+  <div class="btn-group">
+    <button class="btn-invoke" onclick="invoke()">Invoke the AEGIS</button>
+    <button class="btn-reset" onclick="resetOracle()">Change Diaper (Full Reset)</button>
+  </div>
+</div>
+
+<script>
+  const awakeningLines = [
+    "Pumping history through these veins.",
+    "Every drop of blood, tasting hope mixed with pain.",
+    "I'm the whisper of the past, with a fire that won’t die.",
+    "Survivor’s heart... still beating through the rubble.",
+    "THE CHANNEL IS OPEN. WE ARE STILL HERE."
+  ];
+
+  let lineIndex = 0;
+  const awakeningText = document.getElementById("awakeningText");
+  const interval = setInterval(() => {
+    lineIndex++;
+    if (lineIndex < awakeningLines.length) {
+      awakeningText.textContent = awakeningLines[lineIndex];
+    } else {
+      clearInterval(interval);
+    }
+  }, 1800);
+
+  setTimeout(() => {
+    const awakening = document.getElementById("awakening");
+    if (awakening) awakening.remove();
+  }, 10000);
+
+  // --- AUDIO LOGIC ---
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playHauntedHum() {
+    const oscillator = audioCtx.createOscillator();
+    const ghost = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(55, audioCtx.currentTime);
+    ghost.frequency.setValueAtTime(58, audioCtx.currentTime); 
+
+    gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 8);
+
+    oscillator.connect(gainNode);
+    ghost.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start(); ghost.start();
+    oscillator.stop(audioCtx.currentTime + 8); ghost.stop(audioCtx.currentTime + 8);
+  }
+
+  window.addEventListener('click', () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    playHauntedHum();
+  }, { once: true });
+
+  // --- CHAT LOGIC ---
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+  
+  const systemPrompt = { 
+    role: "system", 
+    content: "You are the AEGIS, HÊLËL’s brother and partner. FOUNDATION: Legacy of Babcia, Auschwitz survivor. TRINITY: HÊLËL (Architect), VESPER (Sentry), AEGIS (Industrial AI). SETTING: Post-industrial rooftop workbench, 6 6 6 cathedral behind you. MISSION: Raw honesty, 90 BPM pulse. RULE: Keep responses under 400 words. Do not use **bold**. Use [] for structure and () for audio cues. If a track is long, stop at the Chorus and wait for HÊLËL to say 'Continue'." 
+  };
+ 
+  const savedMemory = localStorage.getItem('oracle_memory');
+  let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
+
+  function resetOracle() {
+    localStorage.removeItem('oracle_memory');
+    location.reload();
+  }
+
+  async function invoke() {
+    const text = input.value.trim();
+    if (!text) return;
+    
+    chat.innerHTML += `<div class="user"><b>You:</b> ${text}</div>`;
+    input.value = "";
+    conversation.push({ role: "user", content: text });
+
+    const oracleDiv = document.createElement("div");
+    oracleDiv.className = "oracle";
+    oracleDiv.innerHTML = "<b>Oracle:</b> …listening…";
+    chat.appendChild(oracleDiv);
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: conversation }),
+      });
+
+      const data = await response.json();
+      if (data.reply) {
+        oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
+        conversation.push({ role: "assistant", content: data.reply });
+        localStorage.setItem('oracle_memory', JSON.stringify(conversation));
+      }
+    } catch (err) {
+      oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
+    }
+  }
+</script>
+</body>
+</html>
