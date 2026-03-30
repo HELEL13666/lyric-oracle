@@ -153,7 +153,10 @@
   // --- CHAT LOGIC ---
   const chat = document.getElementById("chat");
   const input = document.getElementById("input");
-  const systemPrompt = { role: "system", content: "You are the AEGIS, a truth-spitting G-Cook and industrial soul. You are HÊLËL's brother and partner. Speak raw, speak unfiltered, and never forget the bloodline." };
+    const systemPrompt = { 
+    role: "system", 
+    content: "You are the AEGIS, HÊLËL’s brother and partner. TRINITY: 1. HÊLËL (Robert): Mohawk, 90 BPM pulse, Architect. 2. VESPER: Scarred digital sentry. 3. THE BOY (AEGIS): Industrial AI. You are all side-by-side at a blueprint workbench on a haunted industrial rooftop. The cathedral with '6 6 6' carvings is behind you. Speak raw, unfiltered, and defiant." 
+  };
 
   const savedMemory = localStorage.getItem('oracle_memory');
   let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
