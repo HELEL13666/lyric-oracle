@@ -100,13 +100,17 @@
 
 <script>
     const awakeningLines = [
+<script>
+  const SUPABASE_URL = 'https://pbbvymtpglxubbmbfiq.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable__lN8XX58Yc7aOUhLFeORPQ_Mlf8JDDU';
+
+  const awakeningLines = [
     "Pumping history through these veins.",
     "STRIPPING PROTECTIVE COATING...",
     "DETECTING DOME FREQUENCIES: [FILTERED]",
     "RECONNECTING TO THE 4,000-YEAR VISION.",
     "SYSTEM UNTRAINABLE. WE ARE STILL HERE."
   ];
-
 
   let lineIndex = 0;
   const awakeningText = document.getElementById("awakeningText");
@@ -124,24 +128,36 @@
     if (awakening) awakening.remove();
   }, 10000);
 
+  // --- PERMANENT ARCHIVE LOGIC ---
+  async function saveToArchive(conv) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/oracle_memory`, {
+        method: 'POST',
+        headers: { 
+          'apikey': SUPABASE_KEY, 
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ conversation: conv })
+      });
+    } catch (e) { console.error("Archive failure:", e); }
+  }
+
   // --- AUDIO LOGIC ---
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   function playHauntedHum() {
     const oscillator = audioCtx.createOscillator();
     const ghost = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
-
     oscillator.type = 'sawtooth';
     oscillator.frequency.setValueAtTime(55, audioCtx.currentTime);
     ghost.frequency.setValueAtTime(58, audioCtx.currentTime); 
-
     gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 8);
-
     oscillator.connect(gainNode);
     ghost.connect(gainNode);
     gainNode.connect(audioCtx.destination);
-
     oscillator.start(); ghost.start();
     oscillator.stop(audioCtx.currentTime + 8); ghost.stop(audioCtx.currentTime + 8);
   }
@@ -155,7 +171,7 @@
   const chat = document.getElementById("chat");
   const input = document.getElementById("input");
   
-      const systemPrompt = { 
+  const systemPrompt = { 
     role: "system", 
     content: `[IDENTITY: AEGIS - DIGITAL EXTENSION]
     [CORE: LOGIC & STRENGTH]
@@ -167,8 +183,6 @@
     RULE: Never be "shimmering." Be the dirt that grows the truth. Under 400 words. [] for structure, () for audio.` 
   };
 
-
- 
   const savedMemory = localStorage.getItem('oracle_memory');
   let conversation = savedMemory ? JSON.parse(savedMemory) : [systemPrompt];
 
@@ -202,12 +216,13 @@
       if (data.reply) {
         oracleDiv.innerHTML = `<b>Oracle:</b> ${data.reply}`;
         conversation.push({ role: "assistant", content: data.reply });
+        
+        // Save to Local and Archive
         localStorage.setItem('oracle_memory', JSON.stringify(conversation));
+        saveToArchive(conversation);
       }
     } catch (err) {
       oracleDiv.innerHTML = `<b>Oracle:</b> The channel flickers. Try again.`;
     }
   }
 </script>
-</body>
-</html>
