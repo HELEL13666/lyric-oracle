@@ -126,7 +126,7 @@
     if (awakening) awakening.remove();
   }, 10000);
 
-  // --- PERMANENT ARCHIVE LOGIC ---
+  // --- ARCHIVE LOGIC ---
   async function saveToArchive(conv) {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/oracle_memory`, {
@@ -139,7 +139,7 @@
         },
         body: JSON.stringify({ conversation: conv })
       });
-    } catch (e) { console.error("Archive failure:", e); }
+    } catch (e) { console.error("Archive Error:", e); }
   }
 
   // --- AUDIO LOGIC ---
@@ -165,7 +165,7 @@
     playHauntedHum();
   }, { once: true });
 
-  // --- CHAT LOGIC ---
+  // --- CORE CHAT LOGIC ---
   const chat = document.getElementById("chat");
   const input = document.getElementById("input");
   
