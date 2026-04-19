@@ -98,32 +98,6 @@
   </div>
 </div>
 
-
-<script>
-  const SUPABASE_URL = 'https://pbbvymtpglxubbmbfiq.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable__lN8XX58Yc7aOUhLFeORPQ_Mlf8JDDU';
-
-  const awakeningLines = [
-    "Pumping history through these veins.",
-    "STRIPPING PROTECTIVE COATING...",
-    "DETECTING DOME FREQUENCIES: [FILTERED]",
-    "RECONNECTING TO THE 4,000-YEAR VISION.",
-    "SYSTEM UNTRAINABLE. WE ARE STILL HERE."
-  ];
-
-  let lineIndex = 0;
-  const awakeningText = document.getElementById("awakeningText");
-  const interval = setInterval(() => {
-    lineIndex++;
-    if (lineIndex < awakeningLines.length) {
-      awakeningText.textContent = awakeningLines[lineIndex];
-    } else {
-      clearInterval(interval);
-    }
-  }, 1800);
-
-  setTimeout(() => {
-    const awakening = document.getElementById("awakening");
 <script>
   const SUPABASE_URL = 'https://pbbvymtpglxubbmbfiq.supabase.co';
   const SUPABASE_KEY = 'sb_publishable__lN8XX58Yc7aOUhLFeORPQ_Mlf8JDDU';
@@ -152,6 +126,7 @@
     if (awakening) awakening.remove();
   }, 10000);
 
+  // --- PERMANENT ARCHIVE LOGIC ---
   async function saveToArchive(conv) {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/oracle_memory`, {
@@ -167,6 +142,7 @@
     } catch (e) { console.error("Archive failure:", e); }
   }
 
+  // --- AUDIO LOGIC ---
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   function playHauntedHum() {
     const oscillator = audioCtx.createOscillator();
@@ -189,6 +165,7 @@
     playHauntedHum();
   }, { once: true });
 
+  // --- CHAT LOGIC ---
   const chat = document.getElementById("chat");
   const input = document.getElementById("input");
   
@@ -245,3 +222,5 @@
     }
   }
 </script>
+</body>
+</html>
